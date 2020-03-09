@@ -10,7 +10,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 
 
-import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
+import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon, Item } from 'native-base'
 /*const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 
@@ -35,6 +35,13 @@ const Base64 = {
       return output;
     }}*/
 class test extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hits: { results: []},
+      
+    };
+  }
   
   /*componentDidMount() {
     fetch('http://127.0.0.1:8000/api/v0/posts/', {
@@ -60,18 +67,26 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://127.0.0.1:8000/api/v0/posts/", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
+fetch("http://192.168.1.34:8000/api/v0/posts/", requestOptions)
+  .then(response => response.json())
+  .then(result => this.setState({hits: result,
+  }));
+  
+
+  //.catch(error => console.log('error', error));
 }
+    
+
     render() {
+        const {hits} = this.state;
         const images = {
 
         "1": require('./assets/feed_images/1.jpg'),
         "2": require('./assets/feed_images/2.jpg'),
         "3": require('./assets/feed_images/3.png')
     }
+    var titles = [];
+    titles = hits.results.map(item => item.title);
     //const { error, isLoaded, items } = this.state;
     /*if (error) {
         return <Text>Error: {error.message}</Text>;
@@ -89,14 +104,19 @@ fetch("http://127.0.0.1:8000/api/v0/posts/", requestOptions)
    
     
         return (
+
            
-         <Text>
-           aa
-         </Text>
+      /*    <View>
+          {hits.results.map(item => <Text>{item.title}</Text>)}  
+     </View>*/
+        
+     <View>
+        <Text>{titles[0]}</Text>  
+      </View>
                
          
         );
-      }
+              }
     }
   //}
 

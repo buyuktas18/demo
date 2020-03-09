@@ -3,14 +3,19 @@ import {
     View,
     Text,
     StyleSheet,
-    Image
+    Image,
+    TouchableOpacity
 } from "react-native";
 import {createAppContainer, withNavigation} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-
-import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Card, CardItem, Thumbnail, Body, Left, Right, Button} from 'native-base'
+import MaterialCardWithImageAndTitle from "./components/src/components/MaterialCardWithImageAndTitle";
+import MaterialButtonShare from "./components/src/components/MaterialButtonShare";
 
 class CardComponent extends Component {
+
+    
 
     render() {
 
@@ -22,45 +27,38 @@ class CardComponent extends Component {
         }
 
         return (
-            <Card>
-                <CardItem>
-                    <Left>
-                        <Thumbnail source={require('./assets/me.jpg')} />
-                        <Body>
-                            <Text>Deniz </Text>
-                            <Text note>Jan 15, 2018</Text>
-                        </Body>
-                    </Left>
-                </CardItem>
-                <CardItem cardBody>
-                    <Image source={images[this.props.imageSource]} style={{ height: 200, width: null, flex: 1 }} />
-                </CardItem>
-                <CardItem style={{ height: 45 }}>
-                    <Left>
-                        <Button transparent>
-                            <Icon name="ios-help-circle-outline" style={{ color: 'black' }} />
-                        </Button>
-                        <Button transparent onPress={() => this.props.navigation.navigate('chat')}>
-                            <Icon name="ios-chatboxes" style={{ color: 'black' }} />
-                        </Button>
-                        
-
-                    </Left>
-                </CardItem>
-
-                <CardItem style={{ height: 20 }}>
-                    <Text>{this.props.likes} </Text>
-                </CardItem>
-                <CardItem>
+            <Card style={{borderRadius: 50}}>
+            <CardItem style={{borderRadius: 5}}>
+                <Left>
+                    
                     <Body>
-                        <Text>
-                            <Text style={{ fontWeight: "900" }}>Deniz
-                            </Text>
-                            I need a calculator.
-                        </Text>
+                        <Text>Deniz </Text>
+                        <Text note>{this.props.date}</Text>
                     </Body>
-                </CardItem>
-            </Card>
+                </Left>
+            </CardItem>
+            <CardItem>
+                <Right>
+            <TouchableOpacity style={styles.button_m} onPress={this.componentDidMount}>
+            <Icon name="crosshairs" size = {30} style={styles.icon_m}/>
+          </TouchableOpacity>
+          </Right>
+            </CardItem>
+            
+            <CardItem>
+                <Body>
+                    <Text>
+                        <Text style={{ fontWeight: "900" }}>Deniz
+                        </Text>
+                        {this.props.title}
+                    </Text>
+                </Body>
+            </CardItem>
+        </Card>   
+       
+        
+        
+      
         );
     }
 }
@@ -68,7 +66,15 @@ export default withNavigation(CardComponent);
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        borderLeftWidth: 20,
+        borderRadius: 5,
+    },
+    button_m: {
+        backgroundColor: '#000',
+        borderRadius: 30,
+    },
+    icon_m: {
+        color: '#fff',
     }
+ 
+
 });

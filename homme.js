@@ -1,6 +1,6 @@
 /*This is an Example of React Native Map*/
 import React from 'react';
-import { Platform, Alert, ActivityIndicator, StyleSheet, Button, Text, View , TextInput, TouchableOpacity, FlatList} from 'react-native';
+import { Platform, Alert, ActivityIndicator, StyleSheet, Button, Text, View , TextInput, TouchableOpacity} from 'react-native';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import HomeTab from './HomeTab.js';
 import Constants from 'expo-constants';
@@ -25,7 +25,6 @@ state = {
   latitude: 41.105771,
   longitude: 29.025406,
   error: null,
-  hits: {results: []},
 }
 
 
@@ -43,19 +42,6 @@ state = {
        (error) => this.setState({ error: error.message }),
        { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
      );
-     var myHeaders = new Headers();
-  myHeaders.append("Authorization", "Basic dGVzdDpZdXN1ZjE3Nw==");
-
-  var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  redirect: 'follow'
-  };
-
-  fetch("http://192.168.43.142:8000/api/v0/posts/", requestOptions)
-    .then(response => response.json())
-    .then(result => this.setState({hits: result,
-  }));
 
 
   }
@@ -77,7 +63,6 @@ state = {
           }}
           customMapStyle={mapStyle}
         >
-        
         <Marker draggable
             coordinate={{
               latitude: this.state.latitude,
@@ -93,9 +78,7 @@ state = {
             </View>
             
           </Marker>
-          {this.state.hits.results.map(item => <Marker draggable key={item.id.toString()} coordinate={{latitude: parseFloat(item.loc_lat) + 3, longitude: parseFloat(item.loc_long) + 3,}}/>)}
         </MapView>
-        
         <HomeTab style={styles.feed} onPress={() => { console.log('puff') }}/>
         <TouchableOpacity style={styles.button} onPress={ ()=> this.props.navigation.navigate('test')}>
             <Icon name="user" size = {30} style={styles.icon}/>
@@ -126,11 +109,8 @@ const styles = StyleSheet.create({
     bottom:0,
   },
   feed: {
+    width: 500,
     opacity: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: 50
   },
   button: {
       position: 'absolute',
@@ -171,7 +151,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems:'center',
   },
- 
 });
 
 export default home
