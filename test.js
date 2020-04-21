@@ -1,130 +1,103 @@
-import React, { Component } from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image
-} from "react-native";
-import {createAppContainer, withNavigation} from 'react-navigation';
+import * as React from 'react';
+import {createAppContainer, withNavigation } from 'react-navigation';
+import {TextInput, TouchableOpacity, View, styles, ScrollView, Button} from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
-
-
-import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon, Item } from 'native-base'
-/*const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-
-const Base64 = {
-    btoa: (input:string = '')  => {
-      let str = input;
-      let output = '';
-  ​
-      for (let block = 0, charCode, i = 0, map = chars;
-      str.charAt(i | 0) || (map = '=', i % 1);
-      output += map.charAt(63 & block >> 8 - i % 1 * 8)) {
-  ​
-        charCode = str.charCodeAt(i += 3/4);
-  ​
-        if (charCode > 0xFF) {
-          throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
-        }
-        
-        block = block << 8 | charCode;
-      }
-      
-      return output;
-    }}*/
-class test extends React.Component {
-  constructor(props) {
+export default class test extends React.Component {
+  constructor(props){
     super(props);
     this.state = {
-      hits: { results: []},
-      
+      title: "",
+      description: "",
+      reward: "",
+      latitude: 0,
+      longitude: 0,
+      error: null
     };
   }
   
-  /*componentDidMount() {
-    fetch('http://127.0.0.1:8000/api/v0/posts/', {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(json => {
-        this.setState({
-          jsonData: json.results,
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }*/
   componentDidMount(){
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null,
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+    );
+  };
+
+  sendPost(){
     var myHeaders = new Headers();
-myHeaders.append("Authorization", "Basic dGVzdDpZdXN1ZjE3Nw==");
-
-var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  redirect: 'follow'
-};
-
-fetch("http://192.168.1.34:8000/api/v0/posts/", requestOptions)
-  .then(response => response.json())
-  .then(result => this.setState({hits: result,
-  }));
-  
-
-  //.catch(error => console.log('error', error));
-}
+    myHeaders.append("Authorization", "Basic dGVzdDpZdXN1ZjE3Nw==");
     
-
-    render() {
-        const {hits} = this.state;
-        const images = {
-
-        "1": require('./assets/feed_images/1.jpg'),
-        "2": require('./assets/feed_images/2.jpg'),
-        "3": require('./assets/feed_images/3.png')
+    var requestOptions = {
+      method: 'POST',
+      headers: {myHeaders,"Authorization": "Basic dGVzdDpZdXN1ZjE3Nw==", 'Content-Type': 'application/json', Accept: 'application/json',},
+      redirect: 'follow',
+      body: JSON.stringify({ "title": this.state.title,
+        "description": this.state.description,
+        "loc_lat": Number(this.state.latitude.toFixed(6)),
+        "loc_long": Number(this.state.longitude.toFixed(6)),
+        "reward": this.state.reward})
     }
-    var titles = [];
-    titles = hits.results.map(item => item.title);
-    //const { error, isLoaded, items } = this.state;
-    /*if (error) {
-        return <Text>Error: {error.message}</Text>;
-      } else if (!isLoaded) {
-        return <Text>Loading...</Text>;
-      } 
-    else{*/
     
-    
-       
-        
-        
-    
+    fetch("http://192.168.1.106:8000/api/v0/posts/", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
 
-   
-    
-        return (
-
-           
-      /*    <View>
-          {hits.results.map(item => <Text>{item.title}</Text>)}  
-     </View>*/
-        
-     <View>
-        <Text>{titles[0]}</Text>  
-      </View>
-               
-         
-        );
-              }
-    }
-  //}
-
-export default test;
-
-const styles = StyleSheet.create({
-container: {
-    flex: 1,
-    borderLeftWidth: 20,
+  render(){
+    return (
+      <View
+				style={{
+					flex: 1,
+					flexDirection: 'column',
+			        justifyContent: 'center',
+			        padding: 15
+				}}>
+      <View>
+      <TextInput
+        style={{
+          height: 50
+        }}
+        value={this.state.title}
+        onChangeText={(value) => this.setState({title: value})}
+        placeholder="Title"/>
+    </View>
+    <View>
+      <TextInput
+        style={{
+          height: 50
+        }}
+        value={this.state.description}
+        onChangeText={(value) => this.setState({description: value})}
+        placeholder="Description"/>
+    </View>
+    <View>
+      <TextInput
+        style={{
+          height: 50
+        }}
+        value={this.state.reward}
+        onChangeText={(value) => this.setState({reward: value})}
+        placeholder="Reward"/>
+    </View>
+    <View
+    style={{
+      height: 50
+    }}>
+    <Button
+        title="POST" // butonun yazısı
+        color="#4285f4" // arkaplan rengi
+        onPress={this.sendPost.bind(this)} /* butona tıklandığında tetiklenecek fonksiyon*/ />
+  </View>
+</View>
+    );
+  }
 }
-});
+

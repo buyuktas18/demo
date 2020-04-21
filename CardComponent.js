@@ -32,7 +32,7 @@ class CardComponent extends Component {
                 <Left>
                     
                     <Body>
-                        <Text>Deniz </Text>
+                        <Text onPress =   {() => this.props.navigation.navigate('profile', {id: this.props.userId})}>{this.props.user}  </Text>
                         <Text note>{this.props.date}</Text>
                     </Body>
                 </Left>

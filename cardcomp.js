@@ -37,22 +37,6 @@ class CardComponent extends Component {
                 <CardItem cardBody>
                     <Image source={images[this.props.imageSource]} style={{ height: 200, width: null, flex: 1 }} />
                 </CardItem>
-                <CardItem style={{ height: 45 }}>
-                    <Left>
-                        <Button transparent>
-                            <Icon name="ios-help-circle-outline" style={{ color: 'black' }} />
-                        </Button>
-                        <Button transparent onPress={() => this.props.navigation.navigate('chat')}>
-                            <Icon name="ios-chatboxes" style={{ color: 'black' }} />
-                        </Button>
-                        
-
-                    </Left>
-                </CardItem>
-
-                <CardItem style={{ height: 20 }}>
-                    <Text>{this.props.likes} </Text>
-                </CardItem>
                 <CardItem>
                     <Body>
                         <Text>

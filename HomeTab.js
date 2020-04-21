@@ -18,7 +18,10 @@ class HomeTab extends Component {
         super(props);
         this.state = {
           hits: { results: []},
-          
+          refreshing: true,
+          answer: [],
+          users: [],
+          temp: []
         };
       }
     static navigationOptions = {
@@ -38,33 +41,63 @@ class HomeTab extends Component {
       redirect: 'follow'
     };
     
-    fetch("http://192.168.43.142:8000/api/v0/posts/", requestOptions)
+    fetch("http://192.168.1.106:8000/api/v0/posts/", requestOptions)
       .then(response => response.json())
-      .then(result => this.setState({hits: result,
-      }));
+      .then(result => this.setState({hits: result, refreshing: false }))
+      .then(() => {if((this.state.hits.next) != 'null'){
+        fetch(this.state.hits.next, requestOptions)
+            .then(response => response.json())
+            .then(result => this.setState({answer: this.state.hits.results.concat(result.results)}))
+            .then(() =>
+                this.state.answer.map((item) => {
+                fetch(item.owner, requestOptions)
+                    .then(response => response.json())
+                    .then(result => this.state.temp.push(result.username))    
+                    .then(() => this.setState({users: this.state.temp}))
+                }))
+            .then(() => console.log(this.state.users));
+
       
-    
+            
+            
+              
+      }})
+      
+
+      
+      
       //.catch(error => console.log('error', error));
     }
+ 
+  
+                            
+    
+
+    handleRefresh() {
+        this.setState(
+          {
+            refreshing: false
+          },
+          () => this.componentDidMount()
+        );
+      }
     
 
     render() {
         const {hits} = this.state;
-        const images = {
-        "1": require('./assets/feed_images/1.jpg'),
-        "2": require('./assets/feed_images/2.jpg'),
-        "3": require('./assets/feed_images/3.png')
-    }
-    var dates = [];
-    dates = hits.results.map(item => item.created_at);
+        
+    
         return (
             <Container style={styles.container}>
                 <Content>
                     
                     <FlatList
-                         data={this.state.hits.results}
-                        renderItem={({ item }) => <CardComponent title={item.title} date= {Moment(dates[5 - item.id]).format('MMMM Do YYYY, h:mm:ss a')} />}
-                        keyExtractor={item => item.id}
+                        data={this.state.answer}
+                        renderItem={({ item }) => <CardComponent userId = {item.id - 1}  user={this.state.users[this.state.hits.count - item.id]} title={item.title} date= {Moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')} />}
+                        keyExtractor={item => item.id} 
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.handleRefresh.bind(this)}
+                        
       />
                 </Content>
             </Container>

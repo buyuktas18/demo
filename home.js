@@ -52,7 +52,7 @@ state = {
   redirect: 'follow'
   };
 
-  fetch("http://192.168.43.142:8000/api/v0/posts/", requestOptions)
+  fetch("http://192.168.1.106:8000/api/v0/posts/", requestOptions)
     .then(response => response.json())
     .then(result => this.setState({hits: result,
   }));
@@ -97,11 +97,14 @@ state = {
         </MapView>
         
         <HomeTab style={styles.feed} onPress={() => { console.log('puff') }}/>
-        <TouchableOpacity style={styles.button} onPress={ ()=> this.props.navigation.navigate('test')}>
+        <TouchableOpacity style={styles.button} onPress={ ()=> this.props.navigation.navigate('profile')}>
             <Icon name="user" size = {30} style={styles.icon}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button_r} onPress={this.componentDidMount}>
             <Icon name="crosshairs" size = {30} style={styles.icon_r}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button_bottom} onPress={ ()=> this.props.navigation.navigate('test')}>
+            <Icon name="plus" size = {30} style={styles.icon_bottom}/>
           </TouchableOpacity>
       </View>
     );
@@ -171,6 +174,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems:'center',
   },
+  button_bottom: {
+    position: 'absolute',
+    backgroundColor: '#000',
+    width:60,
+    height:60,
+    borderRadius:30,
+    top: 700,
+    alignItems: 'center',
+    justifyContent: 'center',
+    left: 180,
+  },
+  icon_bottom: {
+    color: '#abc',
+  }
  
 });
 
